@@ -11,7 +11,7 @@ layout: default
 
 ### 📂 أقسام المكتبة
 * **[خزانة المقالات](./Public_Articles/README.md):**
-* **[كتاب: رؤية وتلذذ يسوع المسيح](https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html?utm_source=readme):** رابط القراءة المباشرة للكتاب.
+* **[كتاب: رؤية يسوع المسيح والتمتع به](https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html?utm_source=readme):** رابط القراءة المباشرة للكتاب.
 
 ---
 
