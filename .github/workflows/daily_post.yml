@@ -1,0 +1,31 @@
+name: "نظام النشر اليومي للمقالات"
+
+on:
+  schedule:
+    # سيتم التشغيل يومياً في تمام الساعة 9 صباحاً بتوقيت مكة المكرمة
+    - cron: '0 6 * * *'
+  workflow_dispatch: # يسمح لك بتشغيل السكريبت يدوياً للتجربة
+
+jobs:
+  post-article:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "استدعاء الأرشيف"
+        uses: actions/checkout@v3
+
+      - name: "تهيئة بيئة بايثون"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: "تثبيت المكتبات اللازمة"
+        run: |
+          pip install tweepy feedparser html2text
+
+      - name: "تنفيذ مهمة النشر"
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: python automation/post_daily.py
