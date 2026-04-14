@@ -3,41 +3,42 @@ layout: default
 title: "الرئيسية"
 ---
 
-<div dir="rtl" style="text-align: right; max-width: 800px; margin: 0 auto; padding: 20px; font-family: 'Amiri', serif;">
+<div dir="rtl" style="text-align: right; max-width: 800px; margin: 0 auto; padding: 20px 20px 100px 20px; font-family: 'Amiri', serif;">
 
-    <h1 style="color: #7d314c; border-bottom: 2px solid #eee; padding-bottom: 15px; font-size: 32px;">أرشيف "شاء فولدنا بكلمة الحق"</h1>
+    <h1 style="color: #7d314c; border-bottom: 2px solid #eee; padding-bottom: 15px; font-size: 32px; margin-top: 40px;">أرشيف "شاء فولدنا بكلمة الحق"</h1>
     
-    <p style="font-size: 19px; color: #555; font-style: italic;">المستودع الرقمي المركزي للبحوث والترجمات اللاهوتية</p>
+    <div style="margin: 40px 0;">
+        <h3 style="color: #333; font-size: 24px;">📂 أقسام المكتبة</h3>
+        <ul style="list-style: none; padding: 0; font-size: 20px;">
+            <li style="margin-bottom: 20px;">
+                <a href="./Public_Articles/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 22px;">• خزانة المقالات والبحوث</a>
+                <p style="font-size: 17px; color: #666; margin: 5px 25px 0 0;">الأرشيفُ الكاملُ للمقالاتِ مُرتَّباً زمنِيّاً.</p>
+            </li>
+            <li style="margin-bottom: 20px;">
+                <a href="https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 22px;">• كتاب: رؤية وتلذذ يسوع المسيح</a>
+                <p style="font-size: 17px; color: #666; margin: 5px 25px 0 0;">رابطُ القِراءةِ المُباشرةِ في الموقع المستقل.</p>
+            </li>
+        </ul>
+    </div>
 
-    <hr style="border: 0; border-top: 1px solid #ddd; margin: 25px 0;">
-
-    <h3 style="color: #333; font-size: 24px;">📂 أقسام المكتبة</h3>
-    <ul style="list-style: none; padding: 0; font-size: 20px;">
-        <li style="margin-bottom: 15px;">
-            <a href="./Public_Articles/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none;">• خزانة المقالات والبحوث</a>
-            <p style="font-size: 16px; color: #777; margin-right: 25px;">الأرشيفُ الكاملُ للمقالاتِ مُرتَّباً زمنِيّاً.</p>
-        </li>
-        <li style="margin-bottom: 15px;">
-            <a href="https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none;">• كتاب: رؤية وتلذذ يسوع المسيح</a>
-            <p style="font-size: 16px; color: #777; margin-right: 25px;">رابطُ القِراءةِ المُباشرةِ في الموقع المستقل.</p>
-        </li>
-    </ul>
-
-    <hr style="border: 0; border-top: 1px solid #ddd; margin: 25px 0;">
-
-    <h3 style="color: #333; font-size: 24px;">🌐 روابط سريعة</h3>
-    <p style="font-size: 19px;">
-        المدونة: <a href="https://bornbytheword.blogspot.com" style="color: #7d314c; font-weight: bold; text-decoration: none;">شاء فولدنا بكلمة الحق</a>
-    </p>
-    <p style="font-size: 19px;">
-        المستودع البرمجي: <a href="https://github.com/Bichay-Theo/Archive" style="color: #7d314c; font-weight: bold; text-decoration: none;">GitHub Repository</a>
-    </p>
+    <div style="margin: 40px 0;">
+        <h3 style="color: #333; font-size: 24px;">🌐 روابط سريعة</h3>
+        <p style="font-size: 19px; margin-bottom: 10px;">
+            المدونة: <a href="https://bornbytheword.blogspot.com" style="color: #7d314c; font-weight: bold; text-decoration: none;">شاء فولدنا بكلمة الحق</a>
+        </p>
+        <p style="font-size: 19px;">
+            المستودع البرمجي: <a href="https://github.com/Bichay-Theo/Archive" style="color: #7d314c; font-weight: bold; text-decoration: none;">GitHub Repository</a>
+        </p>
+    </div>
 
 </div>
 
 <style>
-    /* فرض التنسيق لضمان عدم السيحان أو التشوه */
+    /* منع التداخل مع الفوتر السفلي وفرض الخط الموقر */
     body { background-color: #fdfaf3 !important; }
     h1, h3, a, p, li { font-family: 'Amiri', serif !important; }
     a:hover { text-decoration: underline !important; }
+    
+    /* إصلاح تداخل الفوتر (this project by...) */
+    footer, .site-footer { margin-top: 50px !important; border-top: 1px solid #eee; }
 </style>
