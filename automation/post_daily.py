@@ -3,7 +3,6 @@ import tweepy
 import random
 import sys
 
-# 1. دالة جلب عميل X باستخدام المفاتيح السرية
 def get_x_client():
     return tweepy.Client(
         consumer_key=os.getenv("X_API_KEY"),
@@ -12,37 +11,52 @@ def get_x_client():
         access_token_secret=os.getenv("X_ACCESS_TOKEN_SECRET")
     )
 
-# 2. دالة اختيار مقال عشوائي من الأرشيف
 def get_random_article():
-    path = "Public_Articles"
-    # التأكد من وجود المجلد أولاً
-    if not os.path.exists(path):
-        print(f"❌ المجلد {path} غير موجود في المستودع.")
-        return None
+    # البحث عن المجلد بغض النظر عن حالة الأحرف
+    possible_paths = ["Public_Articles", "public_articles", "articles"]
+    target_path = None
     
-    articles = [f for f in os.listdir(path) if f.endswith('.html') and f != 'index.html']
-    return random.choice(articles) if articles else None
+    for p in possible_paths:
+        if os.path.exists(p):
+            target_path = p
+            break
+            
+    if not target_path:
+        print(f"❌ خَطَأٌ سِيَادِيٌّ: لَمْ نَجِدْ مُجَلَّدَ المَقَالَاتِ. المُلَجَّدَاتُ المَوْجُودَةُ هِيَ: {os.listdir('.')}")
+        return None
 
-# 3. الدالة الرئيسية لتنفيذ عملية النشر
+    # رادار الملفات: البحث عن أي ملف ينتهي بـ html أو htm وبغض النظر عن حالة الأحرف
+    all_files = os.listdir(target_path)
+    print(f"🔍 الرَّادَارُ وَجَدَ هَذِهِ المَلَفَّاتِ فِي {target_path}: {all_files}")
+    
+    articles = [f for f in all_files if f.lower().endswith(('.html', '.htm')) and f.lower() != 'index.html']
+    
+    if not articles:
+        print("❌ لَمْ نَجِدْ مَلَفَّاتِ HTML صَالِحَةً (هَلِ المَلَفَّاتُ تَنْتَهِي بـِـ .md مَثَلًا؟)")
+        return None
+        
+    return os.path.join(target_path, random.choice(articles))
+
 def run():
-    article_file = get_random_article()
-    if not article_file:
-        print("❌ لم يتم العثور على مقالات صالحة للنشر.")
-        return
+    article_full_path = get_random_article()
+    if not article_full_path:
+        sys.exit(1)
 
-    # تجهيز محتوى التغريدة
-    title = article_file.replace(".html", "").replace("_", " ")
-    link = f"https://bichay-theo.github.io/Archive/Public_Articles/{article_file}"
+    article_file = os.path.basename(article_full_path)
+    title = article_file.replace(".html", "").replace(".htm", "").replace("_", " ")
+    
+    # تأكد من أن الرابط يشير للمسار الصحيح على GitHub Pages
+    link = f"https://bichay-theo.github.io/Archive/{article_full_path}"
+    
     tweet_text = f"مقال اليوم من الأرشيف:\n\n📜 {title}\n\nلقراءة المقال كاملاً:\n{link}"
 
     try:
         client = get_x_client()
         client.create_tweet(text=tweet_text)
-        print(f"✅ تم النشر بنجاح: {title}")
+        print(f"✅ تَمَّ النَّشْرُ بـِـنَجَاحٍ سَاحِقٍ: {title}")
     except Exception as e:
-        print(f"❌ خطأ صارخ أثناء النشر: {e}")
-        sys.exit(1) # لجعل علامة GitHub Actions تتحول للأحمر عند الفشل
+        print(f"❌ خَطَأٌ فِي التَّواصُلِ مَعَ X: {e}")
+        sys.exit(1)
 
-# 4. نقطة انطلاق السكريبت
 if __name__ == "__main__":
     run()
