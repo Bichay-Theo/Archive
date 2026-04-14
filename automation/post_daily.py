@@ -12,7 +12,7 @@ def get_x_client():
     )
 
 def get_random_article():
-    # البحث عن المجلد بغض النظر عن حالة الأحرف
+    # الرادار يبحث في كل الاحتمالات الممكنة للمجلد
     possible_paths = ["Public_Articles", "public_articles", "articles"]
     target_path = None
     
@@ -22,17 +22,16 @@ def get_random_article():
             break
             
     if not target_path:
-        print(f"❌ خَطَأٌ سِيَادِيٌّ: لَمْ نَجِدْ مُجَلَّدَ المَقَالَاتِ. المُلَجَّدَاتُ المَوْجُودَةُ هِيَ: {os.listdir('.')}")
+        print(f"❌ لم نجد مجلد المقالات. المجلدات الحالية: {os.listdir('.')}")
         return None
 
-    # رادار الملفات: البحث عن أي ملف ينتهي بـ html أو htm وبغض النظر عن حالة الأحرف
     all_files = os.listdir(target_path)
-    print(f"🔍 الرَّادَارُ وَجَدَ هَذِهِ المَلَفَّاتِ فِي {target_path}: {all_files}")
     
-    articles = [f for f in all_files if f.lower().endswith(('.html', '.htm')) and f.lower() != 'index.html']
+    # التحديث السيادي: البحث عن ملفات .html و .md معاً
+    articles = [f for f in all_files if f.lower().endswith(('.html', '.htm', '.md')) and f.lower() != 'index.html']
     
     if not articles:
-        print("❌ لَمْ نَجِدْ مَلَفَّاتِ HTML صَالِحَةً (هَلِ المَلَفَّاتُ تَنْتَهِي بـِـ .md مَثَلًا؟)")
+        print(f"❌ المجلد {target_path} لا يحتوي على مقالات صالحة.")
         return None
         
     return os.path.join(target_path, random.choice(articles))
@@ -43,19 +42,22 @@ def run():
         sys.exit(1)
 
     article_file = os.path.basename(article_full_path)
-    title = article_file.replace(".html", "").replace(".htm", "").replace("_", " ")
     
-    # تأكد من أن الرابط يشير للمسار الصحيح على GitHub Pages
-    link = f"https://bichay-theo.github.io/Archive/{article_full_path}"
+    # تنظيف العنوان من الامتدادات والرموز
+    title = article_file.replace(".html", "").replace(".htm", "").replace(".md", "").replace("_", " ")
+    
+    # معالجة الرابط: إذا كان الملف .md، نحوله في الرابط إلى .html لأن جيت هاب يعرضه هكذا
+    web_path = article_full_path.replace(".md", ".html")
+    link = f"https://bichay-theo.github.io/Archive/{web_path}"
     
     tweet_text = f"مقال اليوم من الأرشيف:\n\n📜 {title}\n\nلقراءة المقال كاملاً:\n{link}"
 
     try:
         client = get_x_client()
         client.create_tweet(text=tweet_text)
-        print(f"✅ تَمَّ النَّشْرُ بـِـنَجَاحٍ سَاحِقٍ: {title}")
+        print(f"✅ تم النشر بنجاح ساحق: {title}")
     except Exception as e:
-        print(f"❌ خَطَأٌ فِي التَّواصُلِ مَعَ X: {e}")
+        print(f"❌ خطأ في التواصل مع X: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
