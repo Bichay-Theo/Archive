@@ -1,7 +1,10 @@
 name: "إعادة تسمية الصور سحابياً"
 
 on:
-  workflow_dispatch: # هذا هو السطر الذي يظهر "الزر" اليدوي
+  workflow_dispatch:
+
+permissions:
+  contents: write  # هـذا السـطـر يـحـل مـشـكـلـة الـخـطـأ 128
 
 jobs:
   rename:
@@ -21,6 +24,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add assets/images/
-          git commit -m "مَيْكَنَةُ أَسْمَاءِ الصُّوَرِ لِتُطَابِقَ المَقَالَاتِ" || echo "لا توجد تغييرات"
+          git add assets/images/ || echo "No images to add"
+          git commit -m "مَيْكَنَةُ أَسْمَاءِ الصُّوَرِ [بصلاحيات الكتابة]" || echo "لا توجد تغييرات"
           git push
