@@ -4,7 +4,10 @@ import sys
 import urllib.parse
 from datetime import datetime
 
-# الـمـَسـَارُ الـمـُعـْتـَمـَد
+# =============================================================================
+# ROBUST DAILY POSTER: ARABIC ENCODING PROTECTION
+# =============================================================================
+
 IMAGE_FOLDER = "assets/images"
 
 def get_x_auth():
@@ -20,29 +23,43 @@ def get_x_auth():
     )
 
 def find_article_image(article_filename):
-    """بـُروتوكولُ بـَحـثٍ يـَدعـَمُ الـتـَّرمـِيـزَ الـعـَرَبـِي"""
-    base_name = os.path.splitext(article_filename)[0]
-    if not os.path.exists(IMAGE_FOLDER): return None
+    """بـُروتوكولُ رَصـدٍ ذَكـِي يـَتـَجـاهـَلُ تـَعـَقـِيـداتِ الـتـَّرمـِيـز"""
+    # نـأخـذ الاسـم الـمـجـرد بـدون امـتـداد (مـثـل: إكـلـيـسـيـا)
+    base_target = os.path.splitext(article_filename)[0].strip()
     
-    # مـَسـحُ كـافـَّةِ الـمـَلـَفـَاتِ لـِضـَمـانِ الـتـَّطـابـُقِ الـنـَّصـِّي
+    if not os.path.exists(IMAGE_FOLDER):
+        print(f"⚠️ Warning: {IMAGE_FOLDER} directory is missing.")
+        return None
+    
+    # مـَسـحُ كـافـَّةِ الـمـَلـَفـَاتِ فـِي الـمـُجـَلـَّدِ لـِلـبـَحـثِ عـَن تـَطـابـُقٍ بـَصـَرِي
     for f in os.listdir(IMAGE_FOLDER):
-        if os.path.splitext(f)[0] == base_name:
-            return os.path.join(IMAGE_FOLDER, f)
+        current_img_base = os.path.splitext(f)[0].strip()
+        # مـُقـارَنـَة بـَسـيـطـَة بـَعـِيـداً عـَن تـَعـَقـِيـدات الـمـَسـارات
+        if current_img_base == base_target:
+            full_path = os.path.join(IMAGE_FOLDER, f)
+            print(f"✅ Image Found: {f}")
+            return full_path
+            
+    print(f"❌ No matching image found for: {base_target}")
     return None
 
 def run():
     path = "Public_Articles"
+    # جـَلـبُ الـمـَقـالاتِ بـِتـَرْتـِيـبٍ صـَارِم
     articles = sorted([f for f in os.listdir(path) if f.endswith(('.html', '.md')) and f != 'index.html'])
     
     if not articles:
-        print("❌ لا يوجد مقالات.")
+        print("❌ Error: No articles found in Public_Articles.")
         return
 
+    # اخـتـِيـارُ مـَقـالِ الـيـَوْم
     day_index = (datetime.now().timetuple().tm_yday - 1) % len(articles)
     article_file = articles[day_index]
+    
+    # اسـتـخـلاص الـعـُنـوان لـِلـتـَّغـرِيـدة
     title = os.path.splitext(article_file)[0].replace("_", " ")
     
-    # تـَشـفـِيـرُ الـرَّابـِطِ لـِلـمـُتـَصـَفـَّح
+    # تـَشـفـِيـرُ الـرَّابـِطِ لـِضـَمـانِ الـوُصـُولِ لـِلـمـَوْقـِع
     encoded_file = urllib.parse.quote(article_file)
     link = f"https://bichay-theo.github.io/Archive/Public_Articles/{encoded_file}"
     
@@ -52,19 +69,17 @@ def run():
         api_v1, client_v2 = get_x_auth()
         image_path = find_article_image(article_file)
         
-        if image_path and os.path.exists(image_path):
-            print(f"🔍 صـُورةٌ مـُرصـَدَة: {image_path}")
-            # الـتـَّأكـُّد مـن قـابـلـِيـَةِ قـِراءَةِ الـمـَلـَف
+        if image_path:
+            print(f"🚀 Uploading Media: {image_path}")
             media = api_v1.media_upload(filename=image_path)
             client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
-            print("✅ تـَمـَّتِ الـتـَّغـرِيـدةُ مـَعَ الـصـُّورَة.")
+            print("✨ Tweet posted WITH image.")
         else:
-            print("⚠️ لـَم يـَتـَمـَكـَّن الـنـِّظـامُ مـن رَصـدِ الـصـُّورَة، جـَارٍ الـنـَّشـرُ نـَصـِّيـّاً...")
             client_v2.create_tweet(text=tweet_text)
-            print("✅ تـَمـَّتِ الـتـَّغـرِيـدةُ نـَصـِّيـّاً.")
+            print("✨ Tweet posted WITHOUT image (not found).")
             
     except Exception as e:
-        print(f"❌ فـَشـَلٌ فـِي الـبـُروتوكول: {str(e)}")
+        print(f"💥 Critical Failure: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":
