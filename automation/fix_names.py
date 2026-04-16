@@ -1,23 +1,34 @@
-import os
+import os, re
 
-def fix_article_names():
+def slugify(text):
+    # مـُحـَرِّكُ الـتـَّحـوِيـلِ لِأَسـمـَاءٍ تـِقـنـِيـَّةٍ بـَسـِيـطـَة
+    mapping = {
+        "إكليسيا": "ecclesia",
+        "أغابي_وفيلو": "agape-philo",
+        "الرمزية_في_رسالة_العبرانيين": "hebrews-typology",
+        "الوحش": "the-beast"
+    }
+    base = os.path.splitext(text)[0]
+    return mapping.get(base, base.lower().replace(" ", "-"))
+
+def fix_all():
+    # 1. تـَصـحـِيـحُ الـمـَقـالات
     path = "Public_Articles"
-    if not os.path.exists(path): return
+    for f in os.listdir(path):
+        if f.startswith('.') and f != ".md": continue
+        old_path = os.path.join(path, f)
+        name = "hebrews-typology" if f == ".md" else slugify(f)
+        new_name = f"{name}.html"
+        os.rename(old_path, os.path.join(path, new_name))
+        print(f"✅ Article: {f} -> {new_name}")
 
-    for file in os.listdir(path):
-        old_path = os.path.join(path, file)
-        
-        # 1. تـَصـحـِيـحُ الـمـَلـَفِّ الـذي لَا اسـمَ لـَه
-        if file == ".md":
-            new_name = "الرمزية_في_رسالة_العبرانيين.html"
-            os.rename(old_path, os.path.join(path, new_name))
-            print(f"✅ Fixed hidden file: {new_name}")
-            
-        # 2. تـَحـويـلُ كـافـَّةِ الـمـَلـَفـاتِ لـِتـَنـسـِيـقِ HTML لـِضـَمـانِ الـرَّوابـِط
-        elif file.endswith(".md"):
-            new_name = file.replace(".md", ".html")
-            os.rename(old_path, os.path.join(path, new_name))
-            print(f"✅ Converted to HTML: {new_name}")
+    # 2. تـَصـحـِيـحُ الـصـُّوَر
+    img_path = "assets/images"
+    for f in os.listdir(img_path):
+        if f.startswith('.') or not f.lower().endswith(('.jpg', '.png')): continue
+        old_path = os.path.join(img_path, f)
+        new_name = f"{slugify(f)}{os.path.splitext(f)[1]}"
+        os.rename(old_path, os.path.join(img_path, new_name))
+        print(f"✅ Image: {f} -> {new_name}")
 
-if __name__ == "__main__":
-    fix_article_names()
+if __name__ == "__main__": fix_all()
