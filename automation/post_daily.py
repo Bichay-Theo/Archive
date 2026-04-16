@@ -5,12 +5,14 @@ import urllib.parse
 from datetime import datetime
 
 # =============================================================================
-# ROBUST DAILY POSTER: ARABIC ENCODING PROTECTION
+# ULTIMATE DAILY POSTER: URL & ENCODING SOVEREIGNTY
 # =============================================================================
 
+# مـُجـَلـَّدُ الـصـُّوَرِ الـمـُعـْتـَمـَد
 IMAGE_FOLDER = "assets/images"
 
 def get_x_auth():
+    """بـُروتوكولُ الـمـُصـادَقـَةِ لـِمـَنـَصـَّةِ X"""
     api_key = os.getenv("X_API_KEY", "").strip()
     api_secret = os.getenv("X_API_SECRET", "").strip()
     access_token = os.getenv("X_ACCESS_TOKEN", "").strip()
@@ -23,63 +25,64 @@ def get_x_auth():
     )
 
 def find_article_image(article_filename):
-    """بـُروتوكولُ رَصـدٍ ذَكـِي يـَتـَجـاهـَلُ تـَعـَقـِيـداتِ الـتـَّرمـِيـز"""
-    # نـأخـذ الاسـم الـمـجـرد بـدون امـتـداد (مـثـل: إكـلـيـسـيـا)
+    """الـبـَحـثُ عـَنِ الـصـُّورَةِ الـمـُطـابـِقـَةِ مـَعَ تـَجـاوُزِ عـُقـَدِ الـتـَّرمـِيـز"""
     base_target = os.path.splitext(article_filename)[0].strip()
-    
     if not os.path.exists(IMAGE_FOLDER):
-        print(f"⚠️ Warning: {IMAGE_FOLDER} directory is missing.")
         return None
     
-    # مـَسـحُ كـافـَّةِ الـمـَلـَفـَاتِ فـِي الـمـُجـَلـَّدِ لـِلـبـَحـثِ عـَن تـَطـابـُقٍ بـَصـَرِي
     for f in os.listdir(IMAGE_FOLDER):
-        current_img_base = os.path.splitext(f)[0].strip()
-        # مـُقـارَنـَة بـَسـيـطـَة بـَعـِيـداً عـَن تـَعـَقـِيـدات الـمـَسـارات
-        if current_img_base == base_target:
-            full_path = os.path.join(IMAGE_FOLDER, f)
-            print(f"✅ Image Found: {f}")
-            return full_path
-            
-    print(f"❌ No matching image found for: {base_target}")
+        if os.path.splitext(f)[0].strip() == base_target:
+            return os.path.join(IMAGE_FOLDER, f)
     return None
 
 def run():
+    """تـَنـْفـِيذُ مـَهـَمـَّةِ الـنـَّشـرِ الـيـَوْمـِيـَّةِ بـِأَقـْصـَى دِقـَّة"""
     path = "Public_Articles"
-    # جـَلـبُ الـمـَقـالاتِ بـِتـَرْتـِيـبٍ صـَارِم
+    
+    # جـَلـبُ الـمـَقـالاتِ بـِتـَرْتـِيـبٍ صـَارِمٍ لـِضـَمـانِ الـتـَّسـَلـْسـُل
+    if not os.path.exists(path):
+        print(f"❌ Error: Folder {path} missing.")
+        return
+
     articles = sorted([f for f in os.listdir(path) if f.endswith(('.html', '.md')) and f != 'index.html'])
     
     if not articles:
-        print("❌ Error: No articles found in Public_Articles.")
+        print("❌ Error: No articles found for posting.")
         return
 
-    # اخـتـِيـارُ مـَقـالِ الـيـَوْم
+    # اخـتـِيـارُ مـَقـالِ الـيـَوْمِ بـِنـاءً عـَلـَى تـَقـوِيـمِ الـسـَّنـَة
     day_index = (datetime.now().timetuple().tm_yday - 1) % len(articles)
     article_file = articles[day_index]
     
-    # اسـتـخـلاص الـعـُنـوان لـِلـتـَّغـرِيـدة
+    # صـِيـاغـَةُ الـعـُنـوانِ لـِلـتـَّغـرِيـدة
     title = os.path.splitext(article_file)[0].replace("_", " ")
     
-    # تـَشـفـِيـرُ الـرَّابـِطِ لـِضـَمـانِ الـوُصـُولِ لـِلـمـَوْقـِع
-    encoded_file = urllib.parse.quote(article_file)
-    link = f"https://bichay-theo.github.io/Archive/Public_Articles/{encoded_file}"
+    # 🛡️ بـُروتوكولُ حـِمـايـَةِ الـرَّابـِط (لـِحـَلِّ مـُشـكـِلـَةِ 404)
+    # تـَشـفـِيـرُ اسـمِ الـمـَلـَفِّ فـَقـَط لـِيـَتـَوافـَقَ مـَعَ خـَوادِمِ GitHub Pages
+    encoded_filename = urllib.parse.quote(article_file)
+    link = f"https://bichay-theo.github.io/Archive/Public_Articles/{encoded_filename}"
     
     tweet_text = f"من كنوز الأرشيف اليوم:\n\n📜 {title}\n\nلقراءة المقال كاملاً:\n{link}"
+
+    print(f"🚀 Preparing to post: {title}")
+    print(f"🔗 Generated Link: {link}")
 
     try:
         api_v1, client_v2 = get_x_auth()
         image_path = find_article_image(article_file)
         
-        if image_path:
-            print(f"🚀 Uploading Media: {image_path}")
+        if image_path and os.path.exists(image_path):
+            print(f"📸 Found matching image: {image_path}")
             media = api_v1.media_upload(filename=image_path)
             client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
-            print("✨ Tweet posted WITH image.")
+            print("✅ Success: Posted with image.")
         else:
+            print("⚠️ No matching image found. Posting text only.")
             client_v2.create_tweet(text=tweet_text)
-            print("✨ Tweet posted WITHOUT image (not found).")
+            print("✅ Success: Posted text-only.")
             
     except Exception as e:
-        print(f"💥 Critical Failure: {str(e)}")
+        print(f"❌ Critical Failure: {str(e)}")
         sys.exit(1)
 
 if __name__ == "__main__":
