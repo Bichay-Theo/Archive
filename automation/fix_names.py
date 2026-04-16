@@ -1,34 +1,31 @@
-import os, re
+name: "تَصْحِيحُ الأَسْمَاءِ وَتَعْمِيدُ الرَّوَابِطِ"
 
-def slugify(text):
-    # مـُحـَرِّكُ الـتـَّحـوِيـلِ لِأَسـمـَاءٍ تـِقـنـِيـَّةٍ بـَسـِيـطـَة
-    mapping = {
-        "إكليسيا": "ecclesia",
-        "أغابي_وفيلو": "agape-philo",
-        "الرمزية_في_رسالة_العبرانيين": "hebrews-typology",
-        "الوحش": "the-beast"
-    }
-    base = os.path.splitext(text)[0]
-    return mapping.get(base, base.lower().replace(" ", "-"))
+on:
+  workflow_dispatch: # هـذا مـا يـَجـعـَلـُه يـَظـهـَرُ كـَـزِرٍّ يـَدَوِيّ
 
-def fix_all():
-    # 1. تـَصـحـِيـحُ الـمـَقـالات
-    path = "Public_Articles"
-    for f in os.listdir(path):
-        if f.startswith('.') and f != ".md": continue
-        old_path = os.path.join(path, f)
-        name = "hebrews-typology" if f == ".md" else slugify(f)
-        new_name = f"{name}.html"
-        os.rename(old_path, os.path.join(path, new_name))
-        print(f"✅ Article: {f} -> {new_name}")
+permissions:
+  contents: write # مـَنـحُ الـسـِّيـادَةِ لـِلـكـِتـابـَةِ فـِي الـمـُسـتـَودَع
 
-    # 2. تـَصـحـِيـحُ الـصـُّوَر
-    img_path = "assets/images"
-    for f in os.listdir(img_path):
-        if f.startswith('.') or not f.lower().endswith(('.jpg', '.png')): continue
-        old_path = os.path.join(img_path, f)
-        new_name = f"{slugify(f)}{os.path.splitext(f)[1]}"
-        os.rename(old_path, os.path.join(img_path, new_name))
-        print(f"✅ Image: {f} -> {new_name}")
-
-if __name__ == "__main__": fix_all()
+jobs:
+  fix-and-clean:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: "تـَهـيـِئـَةُ الـبـِيـئـَة"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: "تـَنـفـِيـذُ الـتـَّطـهـِيـرِ الـرَّقـْمـِي"
+        run: python automation/fix_names.py
+        
+      - name: "حـَفـظُ الـتـَّغـيـِيـراتِ الـنـِّهـائـِيـَّة"
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add .
+          git commit -m "تَصْحِيحُ مِعْمَارِ الأَسْمَاءِ [حَسْمُ مَشَاكِلِ 404]" || echo "لا توجد تغييرات"
+          git push
