@@ -1,21 +1,32 @@
 import os
-import glob
 
 def rename_on_cloud():
     articles_path = "Public_Articles"
     images_path = "assets/images"
     
-    # 1. جلب وترتيب المقالات
+    # الـتـَّأَكـُّدُ مـِن وُجـُودِ مـُجـَلـَّدِ الـمـَقـالاتِ
+    if not os.path.exists(articles_path):
+        print(f"❌ Error: Folder {articles_path} not found!")
+        return
+
+    # الـتـَّأَكـُّدُ مـِن وُجـُودِ مـُجـَلـَّدِ الـصـُّوَرِ (وإنـْشـاؤُهُ إِن كـانَ مـَفـْقـُوداً)
+    if not os.path.exists(images_path):
+        print(f"⚠️ Warning: {images_path} not found. Creating it now...")
+        os.makedirs(images_path, exist_ok=True)
+        print("Folder created. Please upload your images to assets/images first.")
+        return
+    
+    # جـَلـْبُ وتـَرْتـِيـبُ الـمـَقـالاتِ
     articles = sorted([f for f in os.listdir(articles_path) if f.endswith(('.md', '.html')) and f != 'index.html'])
     article_names = [os.path.splitext(f)[0] for f in articles]
     
-    # 2. جلب وترتيب الصور الحالية
+    # جـَلـْبُ وتـَرْتـِيـبُ الـصـُّوَرِ الـحـالـِيـَّةِ
     images = sorted([f for f in os.listdir(images_path) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))])
     
-    if len(article_names) != len(images):
-        print(f"⚠️ تحذير: عدد المقالات ({len(article_names)}) لا يطابق عدد الصور ({len(images)})!")
-        # سنستمر في التسمية حتى نصل لنهاية القائمة الأقصر
-    
+    if not images:
+        print("ℹ️ Observation: No images found in assets/images to rename.")
+        return
+
     limit = min(len(article_names), len(images))
     
     for i in range(limit):
@@ -25,7 +36,7 @@ def rename_on_cloud():
         new_path = os.path.join(images_path, new_name)
         
         if old_path != new_path:
-            print(f"🔄 إعادة تسمية: {images[i]} -> {new_name}")
+            print(f"🔄 Renaming: {images[i]} -> {new_name}")
             os.rename(old_path, new_path)
 
 if __name__ == "__main__":
