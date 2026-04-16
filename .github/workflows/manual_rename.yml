@@ -1,29 +1,19 @@
 name: "إعادة تسمية الصور سحابياً"
-
 on:
   workflow_dispatch:
-
 permissions:
-  contents: write  # هـذا السـطـر يـحـل مـشـكـلـة الـخـطـأ 128
-
+  contents: write
 jobs:
   rename:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-      
-      - name: "تهيئة بيئة بايثون"
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: "تنفيذ سكريبت التسمية"
-        run: python automation/cloud_rename.py
-        
-      - name: "حفظ التغييرات وإرسالها"
-        run: |
+      - run: python automation/cloud_rename.py
+      - run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git add assets/images/ || echo "No images to add"
-          git commit -m "مَيْكَنَةُ أَسْمَاءِ الصُّوَرِ [بصلاحيات الكتابة]" || echo "لا توجد تغييرات"
+          git add assets/images/ || echo "No images"
+          git commit -m "مَيْكَنَةُ الأَسْمَاءِ [Node 24]" || echo "No changes"
           git push
