@@ -17,6 +17,5 @@ layout: default
 
 ### 🌐 روابط سريعة
 * **المدونة:** [شاء فولدنا بكلمة الحق](https://bornbytheword.blogspot.com)
-* **واجهة الموقع:** [تصفح الأرشيف](https://bichay-theo.github.io/Archive/)
 
 </div>
