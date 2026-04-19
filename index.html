@@ -31,28 +31,32 @@ title: "الرئيسية"
 </div>
 
 <style>
+    /* فرضُ السيادةِ البرمجيَّةِ لتوسيعِ الهيكلِ الخارجيِّ للقالبِ */
+    #content-wrapper .inner, 
+    #main_content, 
+    header .inner, 
+    footer .inner,
+    .inner {
+        max-width: 1200px !important; 
+        width: 95% !important;
+    }
+
     /* فرض خلفية مريحة للعين تليق بوقار المكتبة */
     body { background-color: #fdfaf3 !important; }
     
     /* توحيد الخط الأميري لضمان الجزالة اللغوية والبصرية */
     h1, a, p, li { font-family: 'Amiri', serif !important; }
     
-    /* تحسين تفاعل الروابط عند التمرير */
-    a:hover { 
-        text-decoration: underline !important; 
-        color: #a0405d !important;
+    /* تحسينُ جودةِ الخطِّ وتناسقِ الفقراتِ لراحةِ البصرِ */
+    section#main_content {
+        font-size: 1.2em !important;
+        line-height: 1.8 !important;
     }
 
-    /* موازنة المساحات لضمان عدم تداخل المحتوى مع الهياكل البرمجية للفوتر */
+    /* موازنة المساحات لضمان عدم تداخل المحتوى مع الفوتر */
     .site-footer { 
         margin-top: 80px !important; 
         border-top: 1px solid #eee;
         padding: 20px 0;
-    }
-    
-    /* تكييف العرض للشاشات الصغيرة لضمان مرونة الوصول */
-    @media (max-width: 768px) {
-        div[dir="rtl"] { padding: 20px !important; }
-        h1 { font-size: 32px !important; }
     }
 </style>
