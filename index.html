@@ -3,27 +3,27 @@ layout: default
 title: "الرئيسية"
 ---
 
-<div dir="rtl" style="text-align: right; max-width: 1100px; margin: 0 auto; padding: 40px 40px 120px 40px; font-family: 'Amiri', serif;">
+<div dir="rtl" style="text-align: right; max-width: 850px; margin: 0 auto; padding: 40px 20px 100px 20px; font-family: 'Amiri', serif;">
 
-    <h1 style="color: #7d314c; text-align: center; font-size: 42px; margin-bottom: 50px; border-bottom: 1px solid #eee; padding-bottom: 25px;">المكتبة الرقمية</h1>
+    <h1 style="color: #7d314c; text-align: center; font-size: 38px; margin-bottom: 40px; border-bottom: 1px solid #eee; padding-bottom: 20px;">المكتبة الرقمية</h1>
     
-    <div style="margin: 50px 0;">
-        <ul style="list-style: none; padding: 0; font-size: 22px;">
-            <li style="margin-bottom: 40px;">
-                <a href="./Public_Articles/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 26px;">• خزانة المقالات والبحوث</a>
-                <p style="font-size: 19px; color: #555; margin: 10px 30px 0 0; line-height: 1.6;">الأرشيف الكامل للمقالات مرتباً زمنياً، حيث تتحول العقيدة إلى سلوك حي.</p>
+    <div style="margin: 30px 0;">
+        <ul style="list-style: none; padding: 0; font-size: 20px;">
+            <li style="margin-bottom: 35px;">
+                <a href="./Public_Articles/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 24px;">• خزانة المقالات والبحوث</a>
+                <p style="font-size: 18px; color: #666; margin: 8px 25px 0 0; line-height: 1.6;">الأرشيف الكامل للمقالات مرتباً زمنياً، حيث تتحول العقيدة إلى سلوك حي.</p>
             </li>
-            <li style="margin-bottom: 40px;">
-                <a href="https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 26px;">• كتاب: رؤية يسوع المسيح والتمتع به</a>
-                <p style="font-size: 19px; color: #555; margin: 10px 30px 0 0; line-height: 1.6;">رابط القراءة المباشرة في الموقع المستقل؛ دراسة في جلال الشخص وعمل الفداء.</p>
+            <li style="margin-bottom: 35px;">
+                <a href="https://bichay-theo.github.io/Seeing_and_Savoring_Jesus/index.html" style="color: #7d314c; font-weight: bold; text-decoration: none; font-size: 24px;">• كتاب: رؤية يسوع المسيح والتمتع به</a>
+                <p style="font-size: 18px; color: #666; margin: 8px 25px 0 0; line-height: 1.6;">رابط القراءة المباشرة في الموقع المستقل؛ دراسة في جلال الشخص وعمل الفداء.</p>
             </li>
         </ul>
     </div>
 
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 50px 0;">
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
 
     <div style="margin: 20px 0; text-align: center;">
-        <p style="font-size: 20px; color: #333;">
+        <p style="font-size: 19px; color: #333;">
             المدونة: <a href="https://bornbytheword.blogspot.com" style="color: #7d314c; font-weight: bold; text-decoration: none;">شاء فولدنا بكلمة الحق</a>
         </p>
     </div>
@@ -31,28 +31,16 @@ title: "الرئيسية"
 </div>
 
 <style>
-    /* فرض خلفية مريحة للعين تليق بوقار المكتبة */
+    /* إعادة ضبط الخلفية والخطوط دون المساس بهيكل الحاويات الأصلي */
     body { background-color: #fdfaf3 !important; }
-    
-    /* توحيد الخط الأميري لضمان الجزالة اللغوية والبصرية */
     h1, a, p, li { font-family: 'Amiri', serif !important; }
+    a:hover { text-decoration: underline !important; }
     
-    /* تحسين تفاعل الروابط عند التمرير */
-    a:hover { 
-        text-decoration: underline !important; 
-        color: #a0405d !important;
-    }
-
-    /* موازنة المساحات لضمان عدم تداخل المحتوى مع الهياكل البرمجية للفوتر */
-    .site-footer { 
-        margin-top: 80px !important; 
-        border-top: 1px solid #eee;
-        padding: 20px 0;
-    }
+    /* منع التداخل مع الفوتر مع الحفاظ على انسيابية الصفحة */
+    .site-footer { margin-top: 60px !important; }
     
-    /* تكييف العرض للشاشات الصغيرة لضمان مرونة الوصول */
+    /* ضمان ثبات النص داخل الإطار في الشاشات الصغيرة */
     @media (max-width: 768px) {
-        div[dir="rtl"] { padding: 20px !important; }
-        h1 { font-size: 32px !important; }
+        div[dir="rtl"] { padding: 20px !important; max-width: 100% !important; }
     }
 </style>
