@@ -23,5 +23,5 @@ jobs:
 
       - name: Run Sync Script
         env:
-          GH_TOKEN: ${{ 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 }} # يجب إضافة التوكن في Settings المستودع
+          GH_TOKEN: ${{ secrets.ARCHIVE_ACCESS_TOKEN }} # يجب إضافة التوكن في Settings المستودع
         run: python automation/sync_blogger.py
